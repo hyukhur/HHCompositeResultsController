@@ -1,0 +1,14 @@
+PODS:
+  - HHFixedResultsController (0.0.2)
+
+DEPENDENCIES:
+  - HHFixedResultsController (from `https://raw.githubusercontent.com/hyukhur/HHFixedResultsController/master/HHFixedResultsController.podspec`)
+
+EXTERNAL SOURCES:
+  HHFixedResultsController:
+    :podspec: https://raw.githubusercontent.com/hyukhur/HHFixedResultsController/master/HHFixedResultsController.podspec
+
+SPEC CHECKSUMS:
+  HHFixedResultsController: b8e33195ccfd9dbb86c3cb5a15f463f5a413fd90
+
+COCOAPODS: 0.34.1
