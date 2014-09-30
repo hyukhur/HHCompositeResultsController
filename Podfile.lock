@@ -1,8 +1,10 @@
 PODS:
   - HHFixedResultsController (0.0.2)
+  - OCMock (3.1.1)
 
 DEPENDENCIES:
   - HHFixedResultsController (from `https://raw.githubusercontent.com/hyukhur/HHFixedResultsController/master/HHFixedResultsController.podspec`)
+  - OCMock
 
 EXTERNAL SOURCES:
   HHFixedResultsController:
@@ -10,5 +12,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   HHFixedResultsController: b8e33195ccfd9dbb86c3cb5a15f463f5a413fd90
+  OCMock: f6cb8c162ab9d5620dddf411282c7b2c0ee78854
 
 COCOAPODS: 0.34.1

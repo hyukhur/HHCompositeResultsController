@@ -9,6 +9,6 @@ target "HHCompositeResultsController" do
 end
 
 target "HHCompositeResultsControllerTests" do
-
+    pod 'OCMock'
 end
 
