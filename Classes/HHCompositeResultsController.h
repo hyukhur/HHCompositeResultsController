@@ -9,11 +9,14 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
+FOUNDATION_EXPORT NSString *const NSCocoaErrorDomain;
+
 @class NSFetchRequest;
 @class NSFetchedResultsController;
 
 @interface HHCompositeResultsController : NSObject
 - (instancetype)initWithFetchedResultsController:(NSFetchedResultsController *)fetchedResultsController;
+- (NSFetchedResultsController *)fetchedResultsController;
 - (void)addObject:(NSFetchedResultsController *)object;
 - (void)addObjectFromArray:(NSArray *)objects;
 - (void)removeObject:(NSFetchedResultsController *)anObject;

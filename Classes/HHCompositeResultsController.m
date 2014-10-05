@@ -8,6 +8,12 @@
 
 #import "HHCompositeResultsController.h"
 
+NSString *const HHCocoaErrorDomain = @"HHCocoaErrorDomain";
+
+enum : NSInteger {
+    HHMultipleErrorsError                  = 1560
+};
+
 struct HHCompositeResultsControllerIndex {
     NSUInteger index;
     NSUInteger section;
@@ -58,7 +64,18 @@ typedef struct HHCompositeResultsControllerIndex HHCompositeResultsControllerInd
 
 - (BOOL)performFetch:(NSError **)error
 {
-    return NO;
+    __block BOOL result = NO;
+    NSMutableArray *errors = error ? [NSMutableArray array] : nil;
+    [self.fetchedResultsControllers enumerateObjectsUsingBlock:^(NSFetchedResultsController *obj, NSUInteger idx, BOOL *stop) {
+        NSError *error = nil;
+        BOOL success = [obj performFetch:&error];
+        [errors addObject:error?:@(success)];
+        result |= success;
+    }];
+    if ([errors count]) {
+        *error = [NSError errorWithDomain:HHCocoaErrorDomain code:HHMultipleErrorsError userInfo:@{NSUnderlyingErrorKey:errors}];
+    }
+    return result;
 }
 
 - (NSFetchRequest *)fetchRequest
@@ -191,6 +208,11 @@ typedef struct HHCompositeResultsControllerIndex HHCompositeResultsControllerInd
     return self;
 }
 
+- (NSFetchedResultsController *)fetchedResultsController
+{
+    return (NSFetchedResultsController *)self;
+}
+
 - (void)setDelegate:(id<NSObject, NSFetchedResultsControllerDelegate>)delegate
 {
     _delegate = delegate;
@@ -231,29 +253,61 @@ typedef struct HHCompositeResultsControllerIndex HHCompositeResultsControllerInd
 
 @implementation HHCompositeResultsController (Delegate)
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)anIndexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)aNewIndexPath
 {
-    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(controller:didChangeObject:atIndexPath:forChangeType:newIndexPath:)]) {
+        __block NSUInteger sectionsCount = 0;
+        [self.fetchedResultsControllers enumerateObjectsUsingBlock:^(NSFetchedResultsController *obj, NSUInteger idx, BOOL *stop) {
+            if (obj == controller) {
+                *stop = YES;
+            } else {
+                sectionsCount += [[obj sections] count];
+            }
+        }];
+        NSIndexPath *indexPath = anIndexPath ? [NSIndexPath indexPathForRow:anIndexPath.row inSection:sectionsCount + anIndexPath.section] : nil;
+        NSIndexPath *newIndexPath = aNewIndexPath ? [NSIndexPath indexPathForRow:aNewIndexPath.row inSection:sectionsCount + aNewIndexPath.section] : nil;
+        [self.delegate controller:self.fetchedResultsController didChangeObject:anObject atIndexPath:indexPath forChangeType:type newIndexPath:newIndexPath];
+    }
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
-    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(controller:didChangeSection:atIndex:forChangeType:)]) {
+        __block NSUInteger sectionsCount = 0;
+        [self.fetchedResultsControllers enumerateObjectsUsingBlock:^(NSFetchedResultsController *obj, NSUInteger idx, BOOL *stop) {
+            if (obj == controller) {
+                *stop = YES;
+            } else {
+                sectionsCount += [[obj sections] count];
+            }
+        }];
+        [self.delegate controller:self.fetchedResultsController didChangeSection:sectionInfo atIndex:sectionsCount + sectionIndex forChangeType:type];
+    }
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
-    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(controllerWillChangeContent:)]) {
+        [self.delegate controllerWillChangeContent:self.fetchedResultsController];
+    }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(controllerDidChangeContent:)]) {
+        [self.delegate controllerDidChangeContent:self.fetchedResultsController];
+    }
 }
 
 - (NSString *)controller:(NSFetchedResultsController *)controller sectionIndexTitleForSectionName:(NSString *)sectionName
 {
-    return nil;
+    if (self.delegate && [self.delegate respondsToSelector:@selector(controller:sectionIndexTitleForSectionName:)]) {
+        return [self.delegate controller:self.fetchedResultsController sectionIndexTitleForSectionName:sectionName];
+    }
+    /*
+     The default implementation returns the capitalized first letter of the section name.
+     */
+    return [sectionName length] > 0 ? [NSString stringWithFormat: @"%C", [[sectionName capitalizedString] characterAtIndex:0]] : sectionName;
 }
 
 @end
