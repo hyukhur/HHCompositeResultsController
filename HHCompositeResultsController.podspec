@@ -4,8 +4,8 @@ Pod::Spec.new do |s|
   s.summary      = "NSFetchedResultsController Composite Object using multiple NSFetchedResultsController."
 
   s.description  = <<-DESC
-  		 NSFetchedResultsController Composite Object using multiple NSFetchedResultsController.
-                   DESC
+NSFetchedResultsController type Composite Object using multiple NSFetchedResultsController.
+DESC
 
   s.homepage     = "https://github.com/hyukhur/HHCompositeResultsController"
   s.license      = { :type => "MIT", :file => "LICENSE" }
