@@ -136,7 +136,7 @@
     [[self.delegate expect] controllerWillChangeContent:self.frc];
     [[self.delegate expect] controllerDidChangeContent:self.frc];
     [[[self.frc3 stub] andReturn:@[@""]] sections];
-    [[self.delegate expect] controller:self.frc didChangeObject:[OCMArg isNotEqual:@{@"type":@"1type", @"title":@"title one", @"detail":@"test value1", @"type2":@""}] atIndexPath:[OCMArg isEqual:[NSIndexPath indexPathForRow:2 inSection:4]] forChangeType:(NSFetchedResultsChangeDelete) newIndexPath:[OCMArg isNil]];
+    [[self.delegate expect] controller:self.frc didChangeObject:[OCMArg isEqual:@{@"type":@"1type", @"title":@"title one", @"detail":@"test value1", @"type2":@""}] atIndexPath:[OCMArg isEqual:[NSIndexPath indexPathForRow:2 inSection:4]] forChangeType:(NSFetchedResultsChangeDelete) newIndexPath:[OCMArg isNil]];
 
     NSArray *changedObjects = @[
                                 @{@"type":@"2type", @"title":@"title two", @"detail":@"test value2", @"type2":@""},
