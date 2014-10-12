@@ -1,6 +1,6 @@
 language: objective-c
 before_install:
-    - gem install cocoapods --no-rdoc --no-ri --no-document --quiet -v 0.34.1
+    - gem install cocoapods --no-rdoc --no-ri --no-document --quiet
     - brew update
     - brew unlink xctool
     - brew install xctool
