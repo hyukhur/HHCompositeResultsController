@@ -5,7 +5,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 
 target "HHCompositeResultsController" do
-       pod 'HHFixedResultsController', :podspec => 'https://raw.githubusercontent.com/hyukhur/HHFixedResultsController/0.0.3/HHFixedResultsController.podspec'
+       pod 'HHFixedResultsController', :podspec => 'https://raw.githubusercontent.com/hyukhur/HHFixedResultsController/0.0.1/HHFixedResultsController.podspec'
 end
 
 target "HHCompositeResultsControllerTests" do
