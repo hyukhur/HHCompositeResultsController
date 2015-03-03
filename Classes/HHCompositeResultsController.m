@@ -56,7 +56,10 @@ typedef struct HHCompositeResultsControllerIndex HHCompositeResultsControllerInd
     if (self)
     {
         if (context) {
-            [self addObject:[[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:context sectionNameKeyPath:sectionNameKeyPath cacheName:name]];
+            NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:context sectionNameKeyPath:sectionNameKeyPath cacheName:name];
+            if (fetchedResultsController) {
+                [self addObject:fetchedResultsController];
+            }
         }
     }
     return self;
@@ -199,11 +202,17 @@ typedef struct HHCompositeResultsControllerIndex HHCompositeResultsControllerInd
 
 @implementation HHCompositeResultsController
 
-- (instancetype)initWithFetchedResultsController:(NSFetchedResultsController *)fetchedResultsController
+- (instancetype)initWithFetchedResultsController:(NSFetchedResultsController *)fetchedResultsController, ... NS_REQUIRES_NIL_TERMINATION
 {
     self = [self init];
     if (self) {
         _fetchedResultsControllers = [NSMutableArray array];
+        va_list args;
+        va_start(args, fetchedResultsController);
+        for (NSFetchedResultsController *arg = fetchedResultsController; arg != nil; arg = va_arg(args, NSFetchedResultsController *)) {
+            [self addObject:arg];
+        }
+        va_end(args);
     }
     return self;
 }

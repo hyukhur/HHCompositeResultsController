@@ -15,7 +15,7 @@ FOUNDATION_EXPORT NSString *const NSCocoaErrorDomain;
 @class NSFetchedResultsController;
 
 @interface HHCompositeResultsController : NSObject
-- (instancetype)initWithFetchedResultsController:(NSFetchedResultsController *)fetchedResultsController;
+- (instancetype)initWithFetchedResultsController:(NSFetchedResultsController *)fetchedResultsController, ... NS_REQUIRES_NIL_TERMINATION;
 - (NSFetchedResultsController *)fetchedResultsController;
 - (void)addObject:(NSFetchedResultsController *)object;
 - (void)addObjectFromArray:(NSArray *)objects;
